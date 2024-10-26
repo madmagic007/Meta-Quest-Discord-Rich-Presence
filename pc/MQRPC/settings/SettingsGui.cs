@@ -14,55 +14,75 @@ namespace MQRPC.settings {
         private CheckBox cbSleepWake;
         private CheckBox cbNotifs;
         private NumericUpDown nudDelay;
+        private Button btnTryGetAddress;
 
         private bool validated;
         private Config c;
+        private ADBUtils au;
 
         public SettingsGui() {
             c = Config.cfg;
 
-            ClientSize = new Size(300, 171);
+            string address = c.address;
+            bool already = address != null;
+
+            ClientSize = new Size(300, 188);
             Text = Resources.name + " settings";
             Icon = Resources.AppIcon;
             MinimizeBox = false;
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
 
-            Label txtAddress = new Label {
+            Label txtAddress = new() {
                 Text = "Quest address:",
-                Location = new Point(3, 3),
+                Location = new Point(3, 6),
                 AutoSize = true
             };
             Controls.Add(txtAddress);
 
-            Button btnValidate = new Button {
-                Text = "Validate",
-                Height = 22
-            };
-            Controls.Add(btnValidate);
-            btnValidate.Location = new Point(ClientSize.Width - btnValidate.Width - 5, GetEndY(txtAddress) + 4);
-            btnValidate.Click += BtnValidate_Click;
-
-
-            string address = c.address;
-            bool already = address != null;
-            this.tbAddress = new TextBox {
+            tbAddress = new TextBox {
                 Text = address ?? "Not Set",
-                Location = new Point(5, btnValidate.Location.Y + 1),
-                Width = btnValidate.Location.X - 12,
+                Location = new Point(GetEndX(txtAddress) + 5, txtAddress.Location.Y - 3),
+                Width = ClientSize.Width - 10 - GetEndX(txtAddress),
             };
-            Controls.Add(this.tbAddress);
+            Controls.Add(tbAddress);
+
+            btnTryGetAddress = new() {
+                Text = "Try to get address automatically",
+                Width = 190,
+                Height = 22,
+                Location = new Point(3, GetEndY(tbAddress) + 3),
+                Enabled = false
+            };
+            btnTryGetAddress.Click += (_, _) => {
+                txtFeedback.Text = "Attempting to get address automatically...";
+                string adbAddress = au.TryGetAddress();
+
+                if (adbAddress != null) {
+                    txtFeedback.Text = "Address automatically retrieved";
+                    tbAddress.Text = adbAddress.Trim();
+                } else txtFeedback.Text = "Failed to retrieve address automatically";
+            };
+            Controls.Add(btnTryGetAddress);
+
+            Button btnValidate = new() {
+                Text = "Validate",
+                Height = 22,
+            };
+            btnValidate.Location = new Point(ClientSize.Width - btnValidate.Width - 5, GetEndY(tbAddress) + 3);
+            btnValidate.Click += BtnValidate_Click;
+            Controls.Add(btnValidate);
 
             txtFeedback = new Label {
-                Text = already ? "" : "Attempting to get address automatically...",
-                Location = new Point(3, GetEndY(this.tbAddress) + 5),
-                Width = ClientSize.Width - 10
+                Text = already ? "Address read from config" : "Press above button to retrieve quest address",
+                Location = new Point(3, GetEndY(btnTryGetAddress) + 3),
+                Width = ClientSize.Width - 6
             };
             Controls.Add(txtFeedback);
 
-            Label txtDelay = new Label {
+            Label txtDelay = new() {
                 Text = "Presence update delay (Seconds)",
-                Location = new Point(3, GetEndY(txtFeedback) + 2),
+                Location = new Point(3, GetEndY(txtFeedback) + 10),
             };
             Controls.Add(txtDelay);
 
@@ -70,7 +90,7 @@ namespace MQRPC.settings {
                 Value = 3,
                 Minimum = 1,
                 Location = new Point(btnValidate.Location.X, txtDelay.Location.Y),
-                Width = btnValidate.Width -2,
+                Width = btnValidate.Width - 2,
             };
             Controls.Add(nudDelay);
             txtDelay.Width = nudDelay.Location.X - 10;
@@ -87,7 +107,7 @@ namespace MQRPC.settings {
                 Text = "Pause presence when quest screen turns off",
                 Checked = c.sleepWake,
                 Location = new Point(5, GetEndY(cbBoot) + 5),
-                AutoSize= true
+                AutoSize = true
             };
             Controls.Add(cbSleepWake);
 
@@ -99,10 +119,10 @@ namespace MQRPC.settings {
             };
             Controls.Add(cbNotifs);
 
-            Button btnSave = new Button {
+            Button btnSave = new() {
                 Text = "Save",
                 Size = btnValidate.Size,
-                Location = new Point(ClientSize.Width - btnValidate.Width - 5, ClientSize.Height - btnValidate.Height - 3),
+                Location = new Point(ClientSize.Width - btnValidate.Width - 5, ClientSize.Height - btnValidate.Height - 5),
             };
             Controls.Add(btnSave);
             btnSave.Click += (_, e) => {
@@ -114,29 +134,23 @@ namespace MQRPC.settings {
                 Config.Save();
                 Close();
             };
-            
+
+            FormClosed += (_, _) => {
+                au?.Stop();
+            };
+
             Show();
 
             Task.Run(() => {
-                ADBUtils au = new();
+                au = new();
 
-                FormClosed += (_, _) => {
-                    au.Stop();
-                };
-
-                if (!already) {
-                    string adbAddress = au.TryGetAddress();
-
-                    if (adbAddress != null) {
-                        txtFeedback.Text = "Address automatically retrieved";
-                        tbAddress.Text = adbAddress.Trim();
-                    } else txtFeedback.Text = "Failed to retrieve address automatically";
-                }
+                if (!au.WaitforAuth()) return;
+                btnTryGetAddress.Enabled = true;
 
                 if (au.IsInstalled()) return;
-                
+
                 DialogResult d = MessageBox.Show("MQRPC app was not detected on your quest, install now?", "MQRPC not detected on quest", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                
+
                 if (d == DialogResult.OK) Invoke(() => {
                     au.Install();
                     Program.SendNotif("OQPRC successfully installed on quest");
@@ -160,15 +174,20 @@ namespace MQRPC.settings {
                         ["message"] = "validate"
                     }, address);
 
+                    Console.WriteLine(o.ToString());
                     if (!o.ContainsKey("valid")) throw new Exception();
 
-                    txtFeedback.Text = "successfully validated quest";
+                    txtFeedback.Text = "Successfully validated quest";
                     validated = true;
                 } catch (Exception ex) {
-                    Console.WriteLine(ex.InnerException);
-                    txtFeedback.Text = "Quest found but service didn't respond";
+                    Console.WriteLine(ex.Message);
+                    txtFeedback.Text = "No response received from quest";
                 }
             });
+        }
+
+        private static int GetEndX(Control c) {
+            return c.Location.X + c.Width;
         }
 
         private static int GetEndY(Control c) {

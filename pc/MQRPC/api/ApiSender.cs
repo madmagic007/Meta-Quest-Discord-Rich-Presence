@@ -15,7 +15,7 @@ namespace MQRPC.api {
             o["pcAddress"] = IPUtils.GetOwnAddress();
             o["sleepWake"] = Config.cfg.sleepWake;
 
-            return JObject.Parse(("http://" + address + ":" + ApiSocket.port).PostJsonAsync(o).ReceiveString().Result);
+            return JObject.Parse(("http://" + address + ":" + ApiSocket.port).PostStringAsync(o.ToString()).ReceiveString().Result);
         }
     }
 }

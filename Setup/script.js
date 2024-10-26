@@ -1,7 +1,7 @@
 // Configurable values
 var checkboxChecked = true;                     // Is the checkbox on the finished dialog checked by default?
 var checkboxText = "Launch [ProductName]";     // Text for the checkbox on the finished dialog
-var filename = "Oculus Quest Presence.exe";                     // The name of the executable to launch - change * to match the file name you want to launch at the end of your setup
+var filename = "Meta Quest Discord Rich Presence.exe";                     // The name of the executable to launch - change * to match the file name you want to launch at the end of your setup
 
 
 // Constant values from Windows Installer

@@ -7,7 +7,7 @@ namespace MQRPC.presence {
         private static JObject gitObj;
 
         static PresenceHandler() {
-            gitObj = JObject.Parse(("https://raw.githubusercontent.com/madmagic007/Oculus-Quest-Presence/master/lang.json").GetStringAsync().Result);
+            gitObj = JObject.Parse(("https://raw.githubusercontent.com/madmagic007/Meta-Quest-Discord-Rich-Presence/refs/heads/master/lang.json").GetStringAsync().Result);
         }
 
 

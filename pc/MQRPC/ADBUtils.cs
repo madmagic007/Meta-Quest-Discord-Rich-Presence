@@ -11,23 +11,40 @@ namespace MQRPC {
         private AdbServer server;
         private AdbClient client;
         private DeviceData device;
+        private bool isRunning = false;
 
         public ADBUtils() {
             if (server != null) return;
             server = new AdbServer();
             server.StartServer(dir, false);
             client = new AdbClient();
+            isRunning = true;
+        }
+
+        public bool WaitforAuth() {
+            while (isRunning) {
+                foreach (var device in client.GetDevices()) {
+                    if (!device.Model.ToLower().Contains("quest")) continue;
+                    this.device = device;
+                    return true;
+                }
+            }
+            return false;
         }
 
         public string TryGetAddress() {
             foreach (var device in client.GetDevices()) {
                 this.device = device;
                 ConsoleOutputReceiver rec = new ();
+
                 client.ExecuteRemoteCommand("ip addr show wlan0 | grep 'inet' | awk '{print $2}' | awk -F'/' '{print $1}'", device, rec);
+
                 string[] split = rec.ToString().Split('\n');
                 if (split.Length == 0) continue;
+
                 return split[0];
             }
+
             return null;
         }
 
@@ -61,6 +78,7 @@ namespace MQRPC {
 
         public void Stop() {
             try {
+                isRunning = false;
                 client.KillAdb();
             } catch (Exception) { } //adb already stopped
         }
