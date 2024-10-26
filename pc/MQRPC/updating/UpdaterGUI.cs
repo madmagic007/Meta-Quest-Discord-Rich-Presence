@@ -1,6 +1,6 @@
 ﻿using Flurl.Http;
 using Newtonsoft.Json.Linq;
-using Oculus_Quest_Presence.Properties;
+using Meta_Quest_Discord_Rich_Presence.Properties;
 using MQRPC.settings;
 using System.Diagnostics;
 using System.Drawing;
@@ -71,10 +71,11 @@ namespace MQRPC.updating {
             string dir = Config.dir + "\\MQRPC.apk";
             DownloadTo(dir, url).DownloadFileCompleted += (_, _) => {
                 lblApk.Text = "Finished download";
-                DialogResult d = MessageBox.Show("Updated apk ready to install. Make sure quest is connected via usb", "MQRPC apk update ready to install", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                ADBUtils au = new ADBUtils();
-                if (d == DialogResult.OK) {
 
+                DialogResult d = MessageBox.Show("Updated apk ready to install. Make sure quest is connected via usb", "MQRPC apk update ready to install", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+
+                if (d == DialogResult.OK) {
+                    ADBUtils au = new();
                     if (au.TryGetAddress().Equals("")) {
                         MessageBox.Show("Quest not connected, make sure quest is connected to proceed", "Quest not connected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
@@ -83,7 +84,7 @@ namespace MQRPC.updating {
                     }
 
                     au.Install(dir);
-                    Program.SendNotif("OQPRC successfully updated on quest");
+                    Program.SendNotif("MQRPC successfully updated on quest");
                     au.Launch();
                     au.Stop();
                     lblApk.Text = "Sucesfully updated";
@@ -99,11 +100,12 @@ namespace MQRPC.updating {
             DownloadTo(dir, url).DownloadFileCompleted += (_, _) => {
                 lblSelf.Text = "Starting update...";
 
-                FileInfo f = new FileInfo(dir);
+                FileInfo f = new (dir);
 
-                var p = new Process();
-                p.StartInfo = new ProcessStartInfo(f.FullName) {
-                    UseShellExecute = true
+                var p = new Process {
+                    StartInfo = new ProcessStartInfo(f.FullName) {
+                        UseShellExecute = true
+                    }
                 };
                 p.Start();
 
@@ -112,7 +114,7 @@ namespace MQRPC.updating {
             };
         }
 
-        private WebClient DownloadTo(string dir, string url) {
+        private static WebClient DownloadTo(string dir, string url) {
             using WebClient wc = new();
             wc.DownloadFileAsync(new Uri(url), dir);
             return wc;

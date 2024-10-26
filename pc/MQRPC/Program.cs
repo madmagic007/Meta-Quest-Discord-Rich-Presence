@@ -1,6 +1,5 @@
-﻿using Microsoft.Win32;
-using Newtonsoft.Json.Linq;
-using Oculus_Quest_Presence.Properties;
+﻿]using Newtonsoft.Json.Linq;
+using Meta_Quest_Discord_Rich_Presence.Properties;
 using MQRPC.api;
 using MQRPC.settings;
 using MQRPC.updating;
