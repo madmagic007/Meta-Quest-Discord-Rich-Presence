@@ -1,0 +1,28 @@
+# IntelliJ
+*.iml
+.idea/
+
+# Gradle
+.gradle
+build/
+
+# Binaries
+*.iss
+*.class
+target/
+release/
+packages/
+bin/
+obj/
+*.vdproj
+Setup.exe
+
+# Android
+captures/
+.externalNativeBuild
+.cxx
+local.properties
+
+#vs
+.vs/
+publishprofiles/
