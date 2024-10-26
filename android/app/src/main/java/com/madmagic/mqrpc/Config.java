@@ -1,4 +1,4 @@
-package com.madmagic.oqrpc;
+package com.madmagic.mqrpc;
 
 import android.content.Context;
 import org.json.JSONObject;
@@ -19,7 +19,7 @@ public class Config {
         cFile = new File(context.getFilesDir(), "config.json");
         mFile = new File(context.getFilesDir(), "moduleConfig.modules");
 
-        moduleFolder = new File(context.getExternalFilesDir(null), "OQRPC Modules");
+        moduleFolder = new File(context.getExternalFilesDir(null), "MQRPC Modules");
 
         try {
             if (!cFile.exists()) cFile.createNewFile();
@@ -62,7 +62,7 @@ public class Config {
         try {
             return config.getBoolean("sleepWake");
         } catch (Exception ignore) {}
-        return false;
+        return true;
     }
 
     public static void setSleepWake(boolean value) {

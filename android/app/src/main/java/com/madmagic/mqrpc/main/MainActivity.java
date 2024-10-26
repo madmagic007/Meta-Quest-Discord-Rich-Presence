@@ -1,18 +1,18 @@
-package com.madmagic.oqrpc.main;
+package com.madmagic.mqrpc.main;
 
-import android.app.AppOpsManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
-import com.madmagic.oqrpc.*;
+import com.madmagic.mqrpc.*;
+import com.madmagic.mqrpc.api.ApiSender;
+import com.madmagic.mqrpc.utils.ConnectionChecker;
+import com.madmagic.mqrpc.utils.DeviceInfo;
+import com.madmagic.mqrpc.utils.PermissionHandler;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -31,14 +31,15 @@ public class MainActivity extends AppCompatActivity {
         b = true;
 
         Config.init(this);
-        permission(false);
+        PermissionHandler.checkAndPromptBatteryPermission(this, false);
+        PermissionHandler.checkUsageStatsPermission(this, false);
 
         Intent service = new Intent(this, MainService.class);
         if (!MainService.isRunning(getApplicationContext(), MainService.class)) {
             startForegroundService(service);
         }
 
-        findViewById(R.id.btnTerminate).setOnClickListener(v -> {
+        findViewById(R.id.btnStop).setOnClickListener(v -> {
             if (MainService.isRunning(getApplicationContext(), MainService.class)) {
                 stopService(service);
                 ConnectionChecker.end();
@@ -65,11 +66,16 @@ public class MainActivity extends AppCompatActivity {
                 fw.write(log);
                 fw.close();
             } catch (Exception e) {
-                Log.d("OQRPC", Log.getStackTraceString(e));
+                Log.d("MQRPC", Log.getStackTraceString(e));
             }
         }).start());
 
-        findViewById(R.id.btnPermissions).setOnClickListener(v -> permission(true));
+        findViewById(R.id.btnPermissions).setOnClickListener(v -> {
+            PermissionHandler.checkAndPromptBatteryPermission(this, true);
+            PermissionHandler.checkUsageStatsPermission(this, true);
+        });
+
+        ((TextView) findViewById(R.id.ipv4Field)).setText(MainService.getIp(this));
 
         TextView moduleState = findViewById(R.id.txtModuleEnabled);
 
@@ -113,33 +119,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void permission(boolean force) {
-        if (shouldAskUsageStatsPerm(this) || force) {
-            Intent grantPermission = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
-            grantPermission.setData(Uri.fromParts("package", getPackageName(), null));
-            startActivity(grantPermission);
-        }
-    }
-
-    static boolean shouldAskUsageStatsPerm(Context context) {
-        boolean granted;
-        int mode;
-        AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-
-        mode = appOps.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                android.os.Process.myUid(), context.getPackageName());
-
-        if (mode == AppOpsManager.MODE_DEFAULT) {
-            granted = (context.checkCallingOrSelfPermission(android.Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED);
-        } else {
-            granted = (mode == AppOpsManager.MODE_ALLOWED);
-        }
-
-        return !granted;
-    }
-
     private static void updateModule(String packageName, boolean enabled, TextView text) {
         Module module = Module.modules.get(packageName);
+        if (module == null) return;
+
         module.enabled = enabled;
         Module.modules.put(packageName, module);
         Config.updateModules(Module.modules);

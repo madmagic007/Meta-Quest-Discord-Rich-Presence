@@ -2,48 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <View
-        android:id="@+id/divider_1"
-        android:layout_width="1dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/btnTerminate"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="@string/stop"
-        app:layout_constraintBottom_toBottomOf="@+id/divider_1"
-        app:layout_constraintStart_toEndOf="@+id/divider_1"
-        app:layout_constraintTop_toTopOf="@+id/divider_1"/>
-
-    <Button
-        android:id="@+id/btnStart"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="@string/start"
-        app:layout_constraintBottom_toBottomOf="@+id/divider_1"
-        app:layout_constraintEnd_toStartOf="@+id/divider_1"
-        app:layout_constraintTop_toTopOf="@+id/divider_1"/>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <Button
         android:id="@+id/btnLog"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:textAllCaps="false"
         android:text="@string/debugLog"
-        app:layout_constraintBottom_toTopOf="@id/divider_1"
-        app:layout_constraintEnd_toEndOf="@id/btnStart"
-        app:layout_constraintStart_toStartOf="@id/btnStart"/>
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnPermissions"/>
 
     <Button
         android:id="@+id/btnPermissions"
@@ -52,9 +23,46 @@
         android:layout_marginBottom="10dp"
         android:textAllCaps="false"
         android:text="@string/permissions"
-        app:layout_constraintBottom_toTopOf="@id/divider_1"
-        app:layout_constraintEnd_toEndOf="@id/btnTerminate"
-        app:layout_constraintStart_toStartOf="@id/btnTerminate"/>
+        app:layout_constraintTop_toTopOf="@id/btnLog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnLog"/>
+
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/stop"
+        app:layout_constraintStart_toStartOf="@id/btnLog"
+        app:layout_constraintTop_toBottomOf="@id/btnLog"/>
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="@string/start"
+        app:layout_constraintStart_toStartOf="@id/btnPermissions"
+        app:layout_constraintTop_toBottomOf="@id/btnPermissions"/>
+
+    <TextView
+        android:id="@+id/ipv4Header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ipv4Header"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="3dp"
+        app:layout_constraintTop_toBottomOf="@id/btnStop"
+        app:layout_constraintStart_toStartOf="@id/btnStop"/>
+
+    <TextView
+        android:id="@+id/ipv4Field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/ipv4Header"
+        app:layout_constraintTop_toTopOf="@id/ipv4Header"
+        app:layout_constraintEnd_toEndOf="@id/btnStart"/>
 
     <Spinner
         android:id="@+id/modulesSpinner"
@@ -62,9 +70,9 @@
         android:layout_height="30dp"
         android:layout_marginTop="50dp"
         android:textAllCaps="false"
-        app:layout_constraintStart_toStartOf="@id/btnStart"
-        app:layout_constraintEnd_toEndOf="@id/btnTerminate"
-        app:layout_constraintTop_toBottomOf="@id/divider_1" />
+        app:layout_constraintTop_toBottomOf="@id/ipv4Header"
+        app:layout_constraintStart_toStartOf="@id/btnStop"
+        app:layout_constraintEnd_toEndOf="@id/btnStart"/>
 
     <TextView
         android:id="@+id/txtModuleEnabled"
@@ -73,9 +81,9 @@
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="@+id/btnTerminate"
-        app:layout_constraintStart_toStartOf="@id/btnStart"
-        app:layout_constraintTop_toBottomOf="@id/modulesSpinner" />
+        app:layout_constraintStart_toStartOf="@id/modulesSpinner"
+        app:layout_constraintTop_toBottomOf="@id/modulesSpinner"
+        app:layout_constraintEnd_toEndOf="@id/modulesSpinner"/>
 
     <Button
         android:visibility="invisible"
@@ -84,9 +92,10 @@
         android:layout_height="wrap_content"
         android:textAllCaps="false"
         android:text="@string/enable"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/txtModuleEnabled"
-        app:layout_constraintStart_toStartOf="@+id/btnStart"
-        app:layout_constraintStart_toEndOf="@+id/divider_1"/>
+        app:layout_constraintStart_toStartOf="@id/btnStop"
+        app:layout_constraintEnd_toEndOf="@id/btnStop"/>
 
     <Button
         android:visibility="invisible"
@@ -95,8 +104,9 @@
         android:layout_height="wrap_content"
         android:textAllCaps="false"
         android:text="@string/disable"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/txtModuleEnabled"
-        app:layout_constraintEnd_toEndOf="@+id/btnTerminate"
-        app:layout_constraintStart_toEndOf="@+id/divider_1"/>
+        app:layout_constraintStart_toStartOf="@id/btnStart"
+        app:layout_constraintEnd_toEndOf="@id/btnStart"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

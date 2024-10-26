@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.madmagic.oqrpc"
+          package="com.madmagic.mqrpc"
           android:installLocation="auto"
           android:versionCode="1"
           android:versionName="1.0"
-          tools:ignore="GradleOverrides"
-          tools:targetApi="q">
+          tools:ignore="GradleOverrides">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission
@@ -23,10 +22,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.RECEIVE_LAUNCH_BROADCASTS"/>
+    <uses-permission  android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission"/>
 
     <application
             android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
+            android:label="@string/appName"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:usesCleartextTraffic="true"
@@ -37,7 +38,7 @@
         <meta-data android:name="com.oculus.supportedDevices" android:value="quest|delmar"/>
 
         <activity
-                android:name=".main.MainActivity"
+                android:name="com.madmagic.mqrpc.main.MainActivity"
                 android:configChanges="density|keyboard|keyboardHidden|navigation|orientation|screenLayout|screenSize|uiMode"
                 android:launchMode="singleTask"
                 android:exported="true"
@@ -51,28 +52,21 @@
         </activity>
 
         <service
-                android:name=".main.MainService"
-                android:clearTaskOnLaunch="true"
+                android:name="com.madmagic.mqrpc.main.MainService"
                 android:enabled="true"
-                android:exported="true"
-                android:excludeFromRecents="true"
-                android:launchMode="singleInstance"/>
+                android:exported="true"/>
 
         <receiver
-                android:name=".receivers.BootReceiver"
+                android:name="com.madmagic.mqrpc.receivers.BootReceiver"
                 android:enabled="true"
-                android:exported="true"
-                android:label="startMyServiceAtBootReceiver">
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
-                <action android:name="uk.ac.shef.oak.activity_recognition.sensor_service.RestartSensor"/>
-
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".receivers.ScreenReceiver"/>
+
+        <receiver android:name="com.madmagic.mqrpc.receivers.ScreenReceiver"/>
     </application>
 
 </manifest>

@@ -1,8 +1,11 @@
-package com.madmagic.mqrpc;
+package com.madmagic.mqrpc.api;
 
-import android.util.Log;
+import com.madmagic.mqrpc.Config;
+import com.madmagic.mqrpc.Module;
 import com.madmagic.mqrpc.main.MainService;
+import com.madmagic.mqrpc.utils.DeviceInfo;
 import fi.iki.elonen.NanoHTTPD;
+import net.dongliu.apk.parser.Main;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -25,6 +28,7 @@ public class ApiSocket extends NanoHTTPD {
         try {
             final HashMap<String, String> map = new HashMap<>();
             session.parseBody(map);
+
             if (!map.containsKey("postData")) {
                 return newFixedLengthResponse(DeviceInfo.getInfo(s));
             }
@@ -72,6 +76,7 @@ public class ApiSocket extends NanoHTTPD {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return newFixedLengthResponse(r);
     }
 }

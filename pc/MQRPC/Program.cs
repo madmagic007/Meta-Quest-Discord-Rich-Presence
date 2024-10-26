@@ -1,4 +1,4 @@
-﻿]using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Meta_Quest_Discord_Rich_Presence.Properties;
 using MQRPC.api;
 using MQRPC.settings;

@@ -1,9 +1,10 @@
-package com.madmagic.mqrpc;
+package com.madmagic.mqrpc.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import com.madmagic.mqrpc.api.ApiSender;
 import com.madmagic.mqrpc.main.MainService;
 import org.json.JSONObject;
 

@@ -1,4 +1,4 @@
-package com.madmagic.oqrpc;
+package com.madmagic.mqrpc;
 
 import android.util.Log;
 import org.json.JSONObject;
@@ -33,11 +33,7 @@ public class Module implements Serializable {
             for (File file : Config.moduleFolder.listFiles()) {
 
                 JSONObject obj = getJsonObject(file);
-                Log.d("OQRPC", "MODULE");
-                if (obj == null || !obj.has("packageName") || !obj.has("port")){
-                    Log.d("OQRPC", "BAD MODULE " + (obj == null));
-                    continue;
-                }
+                if (obj == null || !obj.has("packageName") || !obj.has("port")) continue;
 
                 Module module = new Module(obj.getString("packageName"), obj.getInt("port"),
                         obj.has("appId") ? obj.getString("appId") : "");
@@ -45,7 +41,6 @@ public class Module implements Serializable {
                     module.enabled = stored.get(module.name).enabled;
                 } catch (Exception ignored) {}
                 modules.put(obj.getString("packageName"), module);
-                Log.d("OQRPC", "put module " + modules.size());
             }
             Config.updateModules(modules);
         } catch (Exception ignored) {}

@@ -1,6 +1,7 @@
-package com.madmagic.mqrpc;
+package com.madmagic.mqrpc.api;
 
 import android.util.Log;
+import com.madmagic.mqrpc.Config;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

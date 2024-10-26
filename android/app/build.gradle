@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
-        applicationId "com.madmagic.oqrpc"
+        applicationId "com.madmagic.mqrpc"
         minSdk 29
-        targetSdk 29
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -33,14 +33,13 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.rvalerio:fgchecker:1.1.0'
-    implementation group: 'org.nanohttpd', name: 'nanohttpd', version: '2.3.1'
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.10.0'
-    implementation group: 'net.dongliu', name: 'apk-parser', version: '2.6.10'
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'net.dongliu:apk-parser:2.6.10'
 }
 
 android.applicationVariants.all { variant ->
     variant.outputs.all {
-        outputFileName = "OQRPC.apk"
+        outputFileName = "MQRPC.apk"
     }
 }
