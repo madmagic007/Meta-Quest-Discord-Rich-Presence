@@ -1,14 +1,18 @@
 {
-	"com.madmagic.oqrpc": {
+	"com.madmagic.mqrpc": {
 		"details": "Setting up presence"
 	},
 	"com.oculus.vrshell": {
-		"details": "In Oculus Home",
-		"largeImageKey": "oculus"
+		"details": "In Meta Home",
+		"largeImageKey": "meta"
 	},
 	"com.oculus.shellenv": {
-		"details": "In Oculus Home",
-		"largeImageKey": "oculus"
+		"details": "In Meta Home",
+		"largeImageKey": "meta"
+	},
+	"com.oculus.systemux": {
+		"details": "In Meta Home",
+		"largeImageKey": "meta"
 	},
 	"com.beatgames.beatsaber": {
 		"largeImageKey": "beatsaber"
