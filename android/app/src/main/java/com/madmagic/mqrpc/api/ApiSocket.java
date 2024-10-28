@@ -1,5 +1,6 @@
 package com.madmagic.mqrpc.api;
 
+import android.util.Log;
 import com.madmagic.mqrpc.Config;
 import com.madmagic.mqrpc.Module;
 import com.madmagic.mqrpc.main.MainService;
@@ -56,8 +57,9 @@ public class ApiSocket extends NanoHTTPD {
                         if (!appId.isEmpty()) response.put("appId", appId);
                     }
                     r = response.put("message", "gameResponse")
-                            .put("name", topmostData[1])
                             .put("packageName", packageName)
+                            .put("name", topmostData[1])
+                            //.put("apkIcon", topmostData[2])
                             .put("detailed", detailed)
                             .toString();
                     break;
@@ -74,7 +76,7 @@ public class ApiSocket extends NanoHTTPD {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d("MQRPC", Log.getStackTraceString(e));
         }
 
         return newFixedLengthResponse(r);

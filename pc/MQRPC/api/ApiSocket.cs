@@ -3,6 +3,8 @@ using NHttp;
 using MQRPC.presence;
 using MQRPC.settings;
 using System.Net;
+using System.IO;
+using System.Text;
 
 namespace MQRPC.api {
 
@@ -17,14 +19,24 @@ namespace MQRPC.api {
         }
 
         protected override void OnRequestReceived(HttpRequestEventArgs e) {
-            JObject resp = new JObject();
+            JObject resp = new();
             if (e.Request.InputStream == null) {
-                WriteResponse(e.Response, "Yep, your pc is running");
+                //string base64 = e.Request.QueryString.Get("base64");
+
+                /*if (base64 != null) {
+                    byte[] data = Convert.FromBase64String(base64);
+
+                    e.Response.ContentType = "image/jpg";
+                    e.Response.OutputStream.Write(data);
+                    e.Response.OutputStream.Close();
+                } else {*/
+                    WriteResponse(e.Response, "Yep, your pc is running");
+                //}
+
                 return;
             }
             using StreamReader sr = new(e.Request.InputStream);
             string msg = sr.ReadToEnd();
-            Console.WriteLine(msg);
             JObject obj = JObject.Parse(msg);
 
             bool update = false;
@@ -42,15 +54,17 @@ namespace MQRPC.api {
 
             switch ((string)obj["message"]) {
                 case "online":
-                    Program.SendNotif("Presence on your quest has started");
+                    if (!DiscordHandler.Init()) return;
+                    Program.SendNotif("Starting showing quest presence in discord");
                     Timers.StartRequesting();
-                    DiscordHandler.Init();
                     break;
+
                 case "offline":
                     PresenceHandler.Stop();
                     break;
+
                 case "connect":
-                    resp["connected"] = "sucesfully connected";
+                    resp["connected"] = "Successfully connected";
                     break;
             }
 
@@ -58,7 +72,7 @@ namespace MQRPC.api {
         }
 
         private static void WriteResponse(HttpResponse resp, string respString) {
-            using StreamWriter writer = new StreamWriter(resp.OutputStream);
+            using StreamWriter writer = new (resp.OutputStream);
             writer.Write(respString);
         }
     }

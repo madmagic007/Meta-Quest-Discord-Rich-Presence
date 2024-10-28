@@ -6,6 +6,7 @@ using MQRPC.updating;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace MQRPC {
 
@@ -16,6 +17,10 @@ namespace MQRPC {
             Config.Init();
             bool forceUpdate = args.Length > 0 && args[0].Equals("forceUpdate");
             if (args.Length > 0 && args[0].Equals("boot") && !Config.cfg.boot) Environment.Exit(0);
+
+            Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true)
+              .SetValue("MQRPC", Application.ExecutablePath);
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

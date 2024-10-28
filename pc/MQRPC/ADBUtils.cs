@@ -50,7 +50,6 @@ namespace MQRPC {
 
         public bool IsInstalled() {
             if (device == null) return true;
-            Console.WriteLine(device == null);
             PackageManager pm = new (client, device);
             return pm.Packages.ContainsKey("com.madmagic.mqrpc");
         }

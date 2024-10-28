@@ -7,8 +7,9 @@ namespace MQRPC.presence {
         private static DiscordRpcClient client;
         private static string lastId = "";
 
-        public static void Init(string id = "664525664946356230") {
+        public static bool Init(string id = "664525664946356230") {
             if (!lastId.Equals(id)) StopPresence();
+            else if (client.IsInitialized) return false; ;
 
             client = new DiscordRpcClient(id);
             lastId = id;
@@ -21,6 +22,8 @@ namespace MQRPC.presence {
                     LargeImageText = "MQRPC by MadMagic"
                 }
             });
+
+            return true;
         }
 
         private static ulong current = 0;
@@ -28,13 +31,15 @@ namespace MQRPC.presence {
             string curId = (string)o["appId"];
             if (curId != null && !lastId.Equals(curId)) Init(curId);
 
-            Timestamps ts = new Timestamps();
+            Timestamps ts = new();
             if (o.ContainsKey("remaining")) ts.EndUnixMilliseconds = (ulong)DateTimeOffset.Now.ToUnixTimeMilliseconds() + (ulong)o["remaining"];
             if (o.ContainsKey("elapsed")) {
                 if ((bool)o["elasped"]) {
                     if (current == 0) current = (ulong) DateTimeOffset.Now.ToUnixTimeMilliseconds();
                     ts.StartUnixMilliseconds = current;
                 } else current = 0;
+            } else if (o.ContainsKey("startTime")) {
+                ts.StartUnixMilliseconds = (ulong)o["startTime"];
             } else current = 0;
 
             client.SetPresence(new RichPresence {

@@ -5,14 +5,16 @@ namespace MQRPC.presence {
     class PresenceHandler {
 
         private static JObject gitObj;
+        private static string lastPackage = "";
+        private static ulong lastStartTime = 0;
 
         static PresenceHandler() {
-            gitObj = JObject.Parse(("https://raw.githubusercontent.com/madmagic007/Meta-Quest-Discord-Rich-Presence/refs/heads/master/lang.json").GetStringAsync().Result);
+            gitObj = JObject.Parse("https://raw.githubusercontent.com/madmagic007/Meta-Quest-Discord-Rich-Presence/refs/heads/master/lang.json".GetStringAsync().Result);
         }
 
 
         public static void Handle(JObject o) {
-            Parser p = new Parser(o);
+            Parser p = new(o);
 
             if (!o.ContainsKey("appId")) {
                 o["details"] = p.Get("details", "Currently playing:");
@@ -23,8 +25,6 @@ namespace MQRPC.presence {
                 o["smallImageText"] = p.Get("smallImageText", "");
             }
 
-            System.Console.WriteLine(o.ToString(Newtonsoft.Json.Formatting.Indented));
-
             if (p.IsEmpty("largeImageKey")) {
                 o["largeImageKey"] = "quest";
                 o["largeImageText"] = "MQRPC by MadMagic";
@@ -33,12 +33,23 @@ namespace MQRPC.presence {
                 o["smallImageText"] = "MQRPC by MadMagic";
             }
 
+            if (!(bool)o["detailed"]) {
+                string packageName = (string)o["packageName"];
+
+                if (lastPackage != packageName) {
+                    lastPackage = packageName;
+                    lastStartTime = (ulong)DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                }
+
+                o["startTime"] = lastStartTime;
+            }
+
             DiscordHandler.Handle(o);
         }
 
         public static void Stop() {
             Timers.StopAll();
-            Program.SendNotif("Presence on your quest has stopped");
+            Program.SendNotif("Stopped showing quest presence in discord");
             DiscordHandler.StopPresence();
         }
 

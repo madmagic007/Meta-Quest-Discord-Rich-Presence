@@ -9,7 +9,7 @@ namespace MQRPC.api {
         public static JObject Get(string url) => JObject.Parse(url.GetStringAsync().Result);
 
         public static JObject Post(JObject o, string address = "") {
-            if (Config.cfg.address != null) address = Config.cfg.address;
+            if (address == "" && Config.cfg.address != null) address = Config.cfg.address;
             if (address == "") return null;
 
             o["pcAddress"] = IPUtils.GetOwnAddress();

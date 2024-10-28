@@ -160,6 +160,7 @@ namespace MQRPC.settings {
         }
 
         private void BtnValidate_Click(object sender, EventArgs e) {
+            txtFeedback.Text = "Validating quest...";
             string address = tbAddress.Text.Trim();
             validated = false;
 
@@ -174,7 +175,6 @@ namespace MQRPC.settings {
                         ["message"] = "validate"
                     }, address);
 
-                    Console.WriteLine(o.ToString());
                     if (!o.ContainsKey("valid")) throw new Exception();
 
                     txtFeedback.Text = "Successfully validated quest";

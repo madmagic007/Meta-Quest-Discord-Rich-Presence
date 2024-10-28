@@ -14,6 +14,7 @@ namespace MQRPC.presence {
 
             int fails = 0;
             int delayMs = Config.cfg.delay * 1000;
+
             requester = new Timer((_) => {
                 if (fails >= 10) {
                     PresenceHandler.Stop();
@@ -25,6 +26,7 @@ namespace MQRPC.presence {
                         ["message"] = "game"
                     });
                     if (!game.HasValues) throw new Exception();
+
                     PresenceHandler.Handle(game);
                     StartTimeOut();
                     fails = 0;

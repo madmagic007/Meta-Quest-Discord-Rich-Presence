@@ -29,7 +29,7 @@ public class ConnectionChecker {
                 }
                 --cMax;
 
-                if (isNetworkAvailable(s.getBaseContext())) {
+                if (isNetworkAvailable(s)) {
                     cTimer.cancel();
                     runConnecter(s);
                 }
@@ -54,14 +54,16 @@ public class ConnectionChecker {
             fTimer.cancel();
         } catch (Exception ignored) {}
         fTimer = new Timer();
+
         fTimer.scheduleAtFixedRate(new TimerTask() {
             public void run() {
                 try {
                     if (max == 1) {
                         fTimer.cancel();
-                    } --max;
+                    }
+                    --max;
 
-                    JSONObject response = ApiSender.send("connect", MainService.getIp(s.getBaseContext()));
+                    JSONObject response = ApiSender.send("connect", MainService.getIp(s));
                     if (response.has("connected")) {
                         end();
                         s.callStart();
