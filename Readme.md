@@ -1,16 +1,11 @@
 
-# Oculus-Quest-Presence
+# Meta-Quest-Presence
 
-## Currently there is an issue when attempting to grant the permission, please use <a href="https://github.com/madmagic007/Oculus-Quest-Presence/wiki/Permission-granting-issues">this</a> workaround in the meantime.
-
-#### Discord Rich Presence for the Oculus Quest
+#### Discord Rich Presence for the Meta Quest
 
 <p align="center">
    <a href="https://discordapp.com/users/401795293797941290/">
    <img src="https://img.shields.io/badge/Discord-%232C2F33.svg?logo=discord" alt="Discord">
-   </a>
-   <a href="https://twitter.com/madmagic5">
-   <img src="https://img.shields.io/badge/Twitter-%23657786.svg?logo=twitter" alt="Twitter">
    </a>
    <a href="https://www.reddit.com/user/madmagic008/">
    <img src="https://img.shields.io/badge/Reddit-%23cee3f8.svg?logo=reddit" alt="Reddit">
@@ -21,28 +16,26 @@
 
 Video tutorial:
 <div align="center">
-  <a href="https://www.youtube.com/watch?v=omhujeBPCIU"><img src="https://img.youtube.com/vi/omhujeBPCIU/maxresdefault.jpg" alt="Video tutorial"></a>
+  <a href="https://www.youtube.com/watch?v=Dhi_8QU2xxU"><img src="https://img.youtube.com/vi/Dhi_8QU2xxU/maxresdefault.jpg" alt="Video tutorial"></a>
 </div>
 <br/><br/>
 
-### Files
-- Download the <a href="https://github.com/madmagic007/Oculus-Quest-Presence/releases" target="_blank">latest release</a> and unzip it.
-- Download and install <a href="https://sidequestvr.com/#/download" target="_blank">SideQuest</a> on your PC.
+### Download
+- Download the <a href="https://github.com/madmagic007/Meta-Quest-Discord-Rich-Presence/releases" target="_blank">latest zip</a> and unzip it.
 
-### On Your PC
-- Make sure you have the latest version of the <a href="https://www.java.com/en/download/win10.jsp" target="_blank">Java JRE</a> installed on your computer.
-- Use SideQuest to sideload the `Quest App Launcher apk` and the `Quest Discord RPC apk` (from the zip)
-- Run `oqrpc.exe` to install the client on your PC (from the zip)
-- After the installer is finished, run the `Oculus Quest Discord RPC.jar`
-- In SideQuest, check the top left corner to see the IP address of your Quest. It should look something like this: `192.168.x.x`
-- Enter this IP address into the popup window.
-
-### On Your Quest
-- Go to `Library > Unknown Sources` and launch oqrpc from there.
-- When the app is launched, a permission popup will appear ~~Select `oqrpc` and toggle it on~~. (Currently broken, follow the next step and read the link at the very top of the readme for a workaround)
-- Press the `B` button on your controller to navigate back and continue the setup.
-
-You can now go back to your PC and press the `validate` button in the popup window. It should tell you that the apk is running. Restart your quest and a notification should appear on your computer telling you that it is online. Your Quest games will now appear in your Discord rich presence.
+### Setup
+- Make sure your quest is sideload ready, that "Developer mode" is enabled for your quest in the Meta Horizon app on your phone
+- Connect the quest via USB to your pc and make sure the quest is connected to the same wifi network as your pc
+- Run `Meta Quest Discord Rich Presence Installer.msi` to install the client on your PC (from the zip)
+- After the installer is finished, run the program
+- Check on your quest for an ADB debugging prompt, press "always allow from this computer". If you have toggled this before, you can ignore it
+- If the above is allowed, a prompt on your pc will appear to install MQRPC.apk on your quest. Press ok to browse and select the previously extracted APK
+- Once the apk has installed, a notification will appear on your pc, and the app should automatically open on your quest
+- Once the app has opened on your quest, enable the toggle to "allow usage acces", press the back arrow on the top left, then press allow for the "always run in background" prompt
+- Next on your pc, press the "Try to get address automatically" button and it will fill in the address automatically
+- Press validate and it should say "Successfully validated quest"
+- Navigate to the system tray, right click the quest icon and click "Request presence restart"
+- Your quest games will now show in your discord rich presence
 
 ---
 
