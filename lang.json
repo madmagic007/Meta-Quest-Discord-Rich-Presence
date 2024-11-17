@@ -98,5 +98,8 @@
 	"com.nextvr.lunar": {
 		"details": "Watching Videos",
 		"state": "NextVR"
+	},
+	"com.scgellgames.ieytdquest": {
+		"state": "I Expect You To Die"
 	}
 }
