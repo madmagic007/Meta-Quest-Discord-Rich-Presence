@@ -18,7 +18,8 @@
 		"largeImageKey": "beatsaber"
 	},
 	"com.owlchemylabs.jobsimulator": {
-		"largeImageKey": "jobsim"
+		"largeImageKey": "jobsim",
+		"details": "this is jobsim test"
 	},
 	"com.vrchat.oculus.quest": {
 		"largeImageKey": "vrchat"
