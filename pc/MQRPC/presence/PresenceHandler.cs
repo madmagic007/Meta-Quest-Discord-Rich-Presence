@@ -4,12 +4,16 @@ using Newtonsoft.Json.Linq;
 namespace MQRPC.presence {
     class PresenceHandler {
 
-        private static JObject gitObj;
+        private static JObject mappings;
         private static string lastPackage = "";
         private static ulong lastStartTime = 0;
 
+        public static void GetMappings() {
+            mappings = JObject.Parse("https://raw.githubusercontent.com/madmagic007/Meta-Quest-Discord-Rich-Presence/refs/heads/master/lang.json".GetStringAsync().Result);
+        }
+
         static PresenceHandler() {
-            gitObj = JObject.Parse("https://raw.githubusercontent.com/madmagic007/Meta-Quest-Discord-Rich-Presence/refs/heads/master/lang.json".GetStringAsync().Result);
+            GetMappings();
         }
 
 
@@ -18,7 +22,7 @@ namespace MQRPC.presence {
 
             if (!o.ContainsKey("appId")) {
                 o["details"] = p.Get("details", "Currently playing:");
-                if (!p.hasGitDetails) o["state"] = p.Get("state", p.name);
+                o["state"] = p.Get("state", p.name);
                 o["largeImageKey"] = p.Get("largeImageKey", "");
                 o["largeImageText"] = p.Get("largeImageText", "");
                 o["smallImageKey"] = p.Get("smallImageKey", "");
@@ -58,7 +62,6 @@ namespace MQRPC.presence {
             internal string packageName;
             internal string name;
             JObject o;
-            internal bool hasGitDetails;
 
 
             public Parser(JObject o) {
@@ -68,9 +71,8 @@ namespace MQRPC.presence {
             }
 
             public string Get(string tag, string fallback) {
-                if (!gitObj.ContainsKey(packageName)) return fallback;
-                JObject gameObj = (JObject)gitObj[packageName];
-                hasGitDetails = tag == "details" && gameObj.ContainsKey(tag);
+                if (!mappings.ContainsKey(packageName)) return fallback;
+                JObject gameObj = (JObject)mappings[packageName];
                 return (string)gameObj[tag] ?? fallback;
             }
 

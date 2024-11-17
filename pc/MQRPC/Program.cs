@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using MQRPC.presence;
 
 namespace MQRPC {
 
@@ -38,14 +39,10 @@ namespace MQRPC {
                 Visible = true
             };
 
-            trayIcon.ContextMenuStrip.Items.AddRange(new ToolStripItem[] {
-                new ToolStripMenuItem("Request presence restart", null, (_, e) => {
-                    ApiSender.Post(new JObject {
-                        ["message"] = "startup"
-                    });
-                }),
-                new ToolStripMenuItem("Settings", null, (_, e) => SettingsGui.GetIfOpen<SettingsGui>(true)?.Show()),
-                new ToolStripMenuItem("Copy current active packagename to clipboard", null, (_, e) => {
+            ToolStripMenuItem advanced = new("Advanced");
+
+            advanced.DropDownItems.AddRange(new ToolStripItem[] {
+                new ToolStripMenuItem("Copy current active packagename to clipboard", null, (_, _) => {
                     JObject game = ApiSender.Post(new JObject {
                         ["message"] = "game"
                     });
@@ -60,6 +57,17 @@ namespace MQRPC {
                     if (res == DialogResult.OK)
                         Clipboard.SetText(str);
                 }),
+                new ToolStripMenuItem("Refresh package mappings", null, (_, _) => PresenceHandler.GetMappings())
+            });
+
+            trayIcon.ContextMenuStrip.Items.AddRange(new ToolStripItem[] {
+                new ToolStripMenuItem("Request presence restart", null, (_, e) => {
+                    ApiSender.Post(new JObject {
+                        ["message"] = "startup"
+                    });
+                }),
+                new ToolStripMenuItem("Settings", null, (_, e) => SettingsGui.GetIfOpen<SettingsGui>(true)?.Show()),
+                advanced,
                 new ToolStripSeparator(),
                 new ToolStripMenuItem("Exit", null, (_, e) => {
                     trayIcon.Dispose();
