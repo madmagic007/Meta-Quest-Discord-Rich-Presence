@@ -18,8 +18,7 @@
 		"largeImageKey": "beatsaber"
 	},
 	"com.owlchemylabs.jobsimulator": {
-		"largeImageKey": "jobsim",
-		"details": "this is jobsim test"
+		"largeImageKey": "jobsim"
 	},
 	"com.vrchat.oculus.quest": {
 		"largeImageKey": "vrchat"
@@ -101,7 +100,7 @@
 		"state": "NextVR"
 	},
 	"com.schellgames.ieytdquest": {
-		"details": "test",
-		"state": "I Expect You To Die"
+		"state": "test",
+		"details": "I Expect You To Die"
 	}
 }
