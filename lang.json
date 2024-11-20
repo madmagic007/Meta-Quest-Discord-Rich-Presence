@@ -100,7 +100,6 @@
 		"state": "NextVR"
 	},
 	"com.schellgames.ieytdquest": {
-		"state": "test",
-		"details": "I Expect You To Die"
+		"state": "I Expect You To Die"
 	}
 }
